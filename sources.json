@@ -1,1 +1,7 @@
-
+{
+    "projections" : {
+        "CMIP6" : "https://cds.climate.copernicus.eu/cdsapp#!/dataset/projections-cmip6?tab=overview",
+        "Climate Explorer (NEMAC)" : "https://crt-climate-explorer.nemac.org",
+        "climate impact lab county level projections" : "https://impactlab.org/research/estimating-economic-damage-from-climate-change-in-the-united-states/"
+    }
+}
