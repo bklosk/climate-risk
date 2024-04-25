@@ -1,3 +1,4 @@
+//+build prod, dev, test
 package main
 
 import (
@@ -6,7 +7,6 @@ import (
   	"github.com/gin-gonic/gin"
 )
 
-// +build prod, dev, test
 func main() {
 	fmt.Println("heyo, world.")
 	test()
