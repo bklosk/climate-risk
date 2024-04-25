@@ -1,18 +1,13 @@
-//+build prod, dev, test
+//+build prod, dev
+
 package main
 
 import (
 	"fmt"
-	"net/http"
-  	"github.com/gin-gonic/gin"
+	// "net/http"
+  	// "github.com/gin-gonic/gin"
 )
 
 func main() {
 	fmt.Println("heyo, world.")
-	test()
-}
-
-// test function
-func test() {
-	fmt.Println("test function")
 }
