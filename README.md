@@ -1,2 +1,2 @@
 # climate-risk
-Quickly visualize climate risk for a given area in the US
+Quickly visualize climate risk for a given address in the US
