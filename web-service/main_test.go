@@ -1,33 +1,44 @@
 package main
 
 import (
-	"bytes"
-	"io"
-	"os"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
-func TestMain_PrintHelloWorld(t *testing.T) {
-	old := os.Stdout // keep backup of the real stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
+func TestGetBen(t *testing.T) {
+	// Create a new Gin router
+	router := gin.Default()
 
-	main()
+	// Register the getBen handler
+	router.GET("/ben", getBen)
 
-	outC := make(chan string)
-	go func() {
-		var buf bytes.Buffer
-		io.Copy(&buf, r)
-		outC <- buf.String()
-	}()
+	// Create a new HTTP request to the /ben endpoint
+	req, err := http.NewRequest("GET", "/ben", nil)
+	if (err != nil) {
+		t.Fatalf("An error occurred while creating a request: %v", err)
+	}
 
-	w.Close()
-	os.Stdout = old // restoring the real stdout
+	// Create a new HTTP response recorder
+	recorder := httptest.NewRecorder()
 
-	out := <-outC
+	// Serve the HTTP request to the recorder
+	router.ServeHTTP(recorder, req)
 
-	expected := "heyo, world.\n"
-	if out != expected {
-		t.Errorf("Expected output %q, but got %q", expected, out)
+	// Assert that the response status code is 200 OK
+	if (recorder.Code != http.StatusOK) {
+		t.Fatalf("Expected status code %v but got %v", http.StatusOK, recorder.Code)
+	}
+
+	// Assert that the response body contains the expected JSON data
+	expectedName := "Ben"
+	var actual user
+	json.Unmarshal(recorder.Body.Bytes(), &actual)
+
+	if (expectedName != actual.Name) {
+		t.Fatalf("Expected JSON %v but got %v", expectedName, recorder.Body.String())
 	}
 }
