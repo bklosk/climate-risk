@@ -8,32 +8,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const test_addr = "2426 ontario rd NW"
-
-func geolocate(address string) (location string) {
-	// geolocate user co-ords from address
+// getCoords: address -> lat, lng
+func getCoords(c *gin.Context) {
+	// spin up openstreetmap geocoder
 	var geocoder = openstreetmap.Geocoder()
-	coords, _ := geocoder.Geocode(test_addr)
-	if (coords != nil) {
-		fmt.Printf("%s location is (%.6f, %.6f)\n", test_addr, coords.Lat, coords.Lng)
-	}
-	
-	coord := "test"
-	return coord
-}
+	var address = c.Param("address")
 
-func getTemp(c *gin.Context) {
-	// var user_address = c.Param("address")
-	temp := "temp_test"
-	c.IndentedJSON(http.StatusOK, temp)
+	// geocode address
+	coded_address, _ := geocoder.Geocode(address)
+	if (coded_address != nil) {
+		fmt.Printf("%s location is (%.4f, %.4f)\n", address, coded_address.Lat, coded_address.Lng)
+		// return coords as JSON
+		c.JSON(http.StatusOK, gin.H{"lat": coded_address.Lat, "lng": coded_address.Lng})
+	} else {
+		fmt.Printf("Could not find coordinates for %s\n", address)
+		c.JSON(http.StatusNotFound, gin.H{"error": "Could not find coordinates for " + address})
+	}
 }
 
 func main() {
 	router := gin.Default()
-	router.GET("/temp/:address", getTemp)
-	geolocate(test_addr)
+	router.GET("/coords/:address", getCoords)
 
 	// start gin server
-	fmt.Println("Starting server on localhost:8080")
+	fmt.Println("\n\nStarting server on localhost:8080")
 	router.Run("localhost:8080")
 }
