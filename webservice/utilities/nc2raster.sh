@@ -1,0 +1,1 @@
+raster2pgsql NETCDF:"netcdf_file.nc":variable_name -I -C -M -F -s 4326
